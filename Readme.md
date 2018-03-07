@@ -1,24 +1,35 @@
 
 Create tf records
 
-python preparedata.py \
-    --data_dir=. \
-    --output_dir=data \
-    --label_map_path=data/label_map.pbtxt
+python ./create_tf_record.py \
+    --data_dir=/home/arpit/training \
+    --output_dir=/home/arpit/training/data \
+    --label_map_path=/home/arpit/training/data/label_map.pbtxt
 
 python train.py \
     --logtostderr \
-    --pipeline_config_path=models/model/ssd_mobilenet_v1_coco.config \
-    --train_dir=models/model/train  
+    --pipeline_config_path=/home/arpit/training/models/model/ssd_mobilenet_v1_coco.config \
+    --train_dir=/home/arpit/training/models/model/train  
 
 python eval.py \
     --logtostderr \
-    --pipeline_config_path=models/model/ssd_mobilenet_v1_coco.config \
-    --checkpoint_dir=models/model/train \
-    --eval_dir=models/model/eval
-python export.py \
-    --input_type image_tensor \
-    --pipeline_config_path models/model/ssd_mobilenet_v1_coco.config \
-    --trained_checkpoint_prefix models/model/train/model.ckpt-{checkpintdigit} \
-    --output_directory rawmodels/sdd/
-   
+    --pipeline_config_path=/home/arpit/training/models/model/ssd_mobilenet_v1_coco.config \
+    --checkpoint_dir=/home/arpit/training/models/model/train \
+    --eval_dir=/home/arpit/training/models/model/eval
+
+python train.py \
+    --logtostderr \
+    --pipeline_config_path=/home/arpit/training/models/model/faster_rcnn_resnet101_coco.config \
+    --train_dir=/home/arpit/training/models/model/train  
+
+python eval.py \
+    --logtostderr \
+    --pipeline_config_path=/home/arpit/training/models/model/faster_rcnn_resnet101_coco.config \
+    --checkpoint_dir=/home/arpit/training/models/model/train \
+    --eval_dir=/home/arpit/training/models/model/eval
+
+
+import tensorflow as tf 
+>>> g = tf.GraphDef()
+>>> g.ParseFromString(open(“path/to/mymodel.pb”, “rb”).read())
+>>> [n for n in g.node if n.name.find(“input”) != -1] # same for     
